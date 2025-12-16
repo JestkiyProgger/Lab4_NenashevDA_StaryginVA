@@ -20,7 +20,6 @@ public class AuditListener {
     @JmsListener(destination = "changes.topic", containerFactory = "jmsListenerTopicContainerFactory")
     public void onMessage(ChangeMessage message) {
         try {
-            // Сохраняем лог в БД
             AuditLog log = new AuditLog();
             log.setChangeType(message.getChangeType());
             log.setEntityName(message.getEntityName());
@@ -28,7 +27,6 @@ public class AuditListener {
             log.setPayload(message.getPayload());
             auditService.save(log);
 
-            // Отправляем письмо
             String subject = "Новая запись в audit_logs: " + message.getEntityName();
             String body = "Изменение: " + message.getChangeType() + "\n" +
                     "ID: " + message.getEntityId() + "\n" +

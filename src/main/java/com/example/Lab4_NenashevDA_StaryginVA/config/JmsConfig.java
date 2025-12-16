@@ -30,14 +30,12 @@ public class JmsConfig {
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
 
-        // создаём ObjectMapper с поддержкой Java 8 времени
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         converter.setObjectMapper(mapper);
 
-        // фиксируем тип сообщений
         converter.setTypeIdMappings(Map.of("_type", ChangeMessage.class));
 
         return converter;
@@ -65,8 +63,8 @@ public class JmsConfig {
     public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory,
                                    MappingJackson2MessageConverter converter) {
         JmsTemplate template = new JmsTemplate(connectionFactory);
-        template.setPubSubDomain(true); // топики
-        template.setMessageConverter(converter); // ставим JSON-конвертер
+        template.setPubSubDomain(true);
+        template.setMessageConverter(converter);
         return template;
     }
 
@@ -79,7 +77,7 @@ public class JmsConfig {
         factory.setConnectionFactory(connectionFactory);
         factory.setPubSubDomain(true);
         factory.setSubscriptionDurable(false);
-        factory.setMessageConverter(converter); // JSON для listeners
+        factory.setMessageConverter(converter);
         return factory;
     }
 
